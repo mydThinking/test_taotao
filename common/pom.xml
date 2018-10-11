@@ -10,6 +10,10 @@
     </parent>
     <!--对公用工具类进行封装打包,不进行任何业务代码实现-->
     <modelVersion>4.0.0</modelVersion>
+
+
+
+
     <artifactId>common</artifactId>
     <packaging>jar</packaging>
     <name>common</name>
