@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.2.xsd
+       http://code.alibabatech.com/schema/dubbo
+       http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!--自动扫描包,使SpringMVC认为包下用了@controller注解的类是控制器-->
+    <context:component-scan base-package="com.taotao.web"/>
+    <!--扩充了注解驱动，可以将请求参数绑定到控制器参数-->
+    <mvc:annotation-driven/>
+    <!--视图解析器-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <!--消费者-->
+    <!--引用dubbo服务-->
+    <!--应用名-->
+    <dubbo:application name="manager-consumer"/>
+    <!--连接到哪个注册中心-->
+    <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
+    <!--消费方用什么协议获取服务(用dubbo协议在20880端口暴露服务)-->
+    <dubbo:protocol port="28080"/>
+    <!--提供哪些接口给消费者使用-->
+    <dubbo:reference interface="com.taotao.service.user.UserService" id="userService"/>
+</beans>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

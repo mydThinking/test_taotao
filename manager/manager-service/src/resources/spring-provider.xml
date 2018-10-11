@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.2.xsd
+       http://code.alibabatech.com/schema/dubbo
+       http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!--自动扫描包,使spring认为包下用了@service注解的类是业务处理类-->
+    <context:component-scan base-package="com.taotao.service"/>
+
+    <!--生产者-->
+    <!--发布dubbo服务-->
+    <!--application：指定当前应用名称，主要用来给zookeeper注册中心计算应用间依赖-->
+    <dubbo:application name="manager-provider"/>
+    <!--registry：用来声明一个注册中心，这里声明一个id为registry的注册中心，地址是本地服务器的2181端口（这里要与zookeeper配置文件的clientPort属性值一致）-->
+    <dubbo:registry id="taoao-manager" address="zookeeper://127.0.0.1:2181"/>
+    <!--protocol：指该应用dubbo协议在20880端口暴露服务,其他应用可以通过这个接口调用服务-->
+    <dubbo:protocol port="20880"/>
+    <!--service用来声明需要暴露的服务接口，将服务接口注册到id为zookeeper的注册中心-->
+    <dubbo:service registry="taoao-manager" interface="com.taotao.service.user.UserService" ref="userService" timeout="3000"/>
+
+
+    <!--导入其他配置-->
+    <!-- <import resource=""-->
+
+</beans>
+
+
+
+
+
+
+
+
+
+
+
+
+
