@@ -1,6 +1,8 @@
 package com.taotao.service.user;
 
+import java.util.List;
+
 public interface UserService {
 
-    void findOne();
+    List<String> findOne();
 }

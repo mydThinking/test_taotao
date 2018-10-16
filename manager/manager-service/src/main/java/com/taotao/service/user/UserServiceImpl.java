@@ -3,6 +3,9 @@ package com.taotao.service.user;
 
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author myd
  */
@@ -10,7 +13,10 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     @Override
-    public void findOne() {
-        System.out.println("qqqqqqqqqqqqqqqqqqq");
+    public List<String> findOne() {
+        List<String> list = new ArrayList<>();
+        list.add("ssss");
+        list.add("bbbb");
+        return list;
     }
 }
