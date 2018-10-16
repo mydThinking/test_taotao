@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+	  http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd">
+    <description>Spring Configuration</description>
+
+    <!-- 加载数据库属性配置文件 -->
+    <context:property-placeholder ignore-unresolvable="true" location="classpath:taotao.properties"/>
+
+    <!--使用Annotation自动注册Bean，解决事物失效问题：在主容器中不扫描@Controller注解，在SpringMvc中只扫描@Controller注解。-->
+    <context:component-scan base-package="com.taotao.service">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!--Mybatis begin-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="typeAliasesPackage" value="com.taotao"/>
+        <property name="typeAliasesSuperType" value="com.taotao.common.persistence.BaseEntity"/>
+        <property name="mapperLocations" value="classpath:/mappings/**/*.xml"/>
+        <property name="configLocation" value="classpath:/mybatis-config.xml"/>
+    </bean>
+
+    <!--扫描basePackage下所有以@MyBatisDao注解的接口-->
+    <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+        <property name="basePackage" value="com.taotao"/>
+        <property name="annotationClass" value="com.taotao.common.persistence.annotation.MyBatisDao"/>
+    </bean>
+
+    <!--定义事务-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--配置Annotation驱动，扫描@Transactional注解的类定义事务-->
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+
+    <!-- 数据库连接池 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="maxActive" value="10"/>
+        <property name="minIdle" value="5"/>
+        <!--配置监控统计拦截filters-->
+        <property name="filters" value="stat"/>
+    </bean>
+
+    <!--Mybatis end-->
+
+    <!--导入dubbo消费者-->
+    <import resource="spring-provider.xml"/>
+</beans>

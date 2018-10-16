@@ -1,9 +1,9 @@
 package com.taotao.dubbo;
 
+import com.alibaba.dubbo.container.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import sun.applet.Main;
 
 /**
  * dubbo的思想就是服务化,所以会有多个服务(提供者)
@@ -20,7 +20,7 @@ public class DubboRun {
      * 启动dubbo服务
      */
     public static void main(String[] args) throws Exception {
-        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring-provider.xml");
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
         //优雅关机
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
