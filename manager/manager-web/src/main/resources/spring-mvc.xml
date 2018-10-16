@@ -22,13 +22,18 @@
         <property name="prefix" value="/WEB-INF/views/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
+    <!--静态文件解析-->
+    <mvc:default-servlet-handler />
 
-    <!--消费者-->
+
+    <!--消费者:负责请求分发-->
     <!--引用dubbo服务-->
     <!--应用名-->
     <dubbo:application name="manager-consumer"/>
-    <!--连接到哪个注册中心-->
+    <!--连接到哪个注册中心,消费者中引用集群节点-->
+    <!--<dubbo:registry address="192.168.25.154:2181,192.168.25.154:2182,192.168.25.154:2183"/>-->
     <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
+    <dubbo:registry address="zookeeper://127.0.0.1:2182"/>
     <!--消费方用什么协议获取服务(用dubbo协议在20880端口暴露服务)-->
     <dubbo:protocol port="28080"/>
     <!--提供哪些接口给消费者使用-->
