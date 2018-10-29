@@ -12,12 +12,34 @@
     <!--application：指定当前应用名称，主要用来给zookeeper注册中心计算应用间依赖-->
     <dubbo:application name="manager-provider"/>
     <!--registry：用来声明一个注册中心，这里声明一个id为registry的注册中心(zookeeper来实现服务注册)，地址是本地服务器的2181端口（这里要与zookeeper配置文件的clientPort属性值一致）-->
+    <!--可以进行多注册中心注册-->
+    <!--dubbo:registry标签一些属性说明
+        register是否向此注册中心注册服务，false，将指订阅，不注册
+        check注册中心不存在时是否报错
+        subscribe是否向此注册中心订阅服务，false,将指注册，不订阅
+        timeout注册中心请求超时时间(ms)
+        address可以Zookeeper集群配置，地址可以多个已分号隔开
+    -->
+    <!--<dubbo:registry register="true" id="taoao-manager" check="false" subscribe="true"
+                    address="zookeeper://127.0.0.1:2181?backup=127.0.0.1:2182"/>-->
     <dubbo:registry id="taoao-manager" address="zookeeper://127.0.0.1:2181"/>
+    <!-- <dubbo:registry id="taotao-manager_second" address="zookeeper://127.0.0.1:2182"/>-->
     <!--protocol：指该应用dubbo协议在20880端口暴露服务,其他应用可以通过这个接口调用服务-->
-    <dubbo:protocol port="20880"/>
+    <dubbo:protocol name="dubbo" port="20880"/>
+    <!--使用配置暴露接口服务-->
     <!--service用来声明需要暴露的服务接口，将服务接口注册到id为zookeeper的注册中心-->
-    <dubbo:service interface="com.taotao.service.modules.user.UserService" ref="userService" timeout="3000"/>
-    <dubbo:service interface="com.taotao.service.modules.goods.GoodsService" ref="goodsService" timeout="3000"/>
+    <!--服务端并发控制-->
+    <!--executes并发数量，需要注意的是，服务提供方设置并发数量后，如果同时请求数量大于设置的executesd的值，则会抛出异常，而不是像消费端设置actives时候，会等待。
+        服务提供发方并发控制是使用ExecuteLimitFilter过滤器实现的
+    -->
+    <!--将不同服务注册到不同的服务中心-->
+    <dubbo:service interface="com.taotao.service.modules.user.UserService" ref="userService" timeout="3000"
+                   version="1.0.0" executes="100" registry="taoao-manager"/>
+    <dubbo:service interface="com.taotao.service.modules.goods.GoodsService" ref="goodsService" timeout="3000"
+                   version="1.0.0" executes="100" registry="taoao-manager"/>
+
+    <!--使用注解暴露接口服务，目前有问题，待解决-->
+    <!--<dubbo:annotation package="com.taotao.service"/>-->
 
 </beans>
 

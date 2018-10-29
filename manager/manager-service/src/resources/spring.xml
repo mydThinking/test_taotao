@@ -51,7 +51,6 @@
         <!--配置监控统计拦截filters-->
         <property name="filters" value="stat"/>
     </bean>
-
     <!--Mybatis end-->
 
     <!--导入dubbo消费者-->

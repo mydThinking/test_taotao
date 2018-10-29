@@ -26,7 +26,7 @@ public class DubboRun {
             @Override
             public void run() {
                 context.stop();
-                logger.info("dubbo service has down");
+                logger.info("dubbo service has down...");
                 synchronized (Main.class) {
                     running = false;
                     Main.class.notify();
@@ -34,7 +34,7 @@ public class DubboRun {
             }
         });
         context.start();
-        logger.info("dubbo service has started");
+        logger.info("dubbo service has started...");
         synchronized (Main.class) {
             while (running) {
                 Main.class.wait();
